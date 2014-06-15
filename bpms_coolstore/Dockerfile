@@ -66,7 +66,8 @@ EXPOSE 8080
 EXPOSE 9990
 EXPOSE 9999
 
-
+RUN rm -rf /tmp/*.zip
+RUN rm -rf /tmp/brms*
 ####### START SERVICES ###########
 #ADD docker_init.sh /docker_init.sh
 #RUN chmod +x /docker_init.sh

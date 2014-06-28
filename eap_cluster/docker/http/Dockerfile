@@ -9,13 +9,21 @@
 FROM fedora
 
 # File Author / Maintainer
-MAINTAINER "Pedro Lopez" "plopezse@redhat.com"
+#MAINTAINER "Pedro Lopez" "plopezse@redhat.com"
 
 # Update the repository sources list
 #RUN yum update -y; yum clean all
 
 ####### BASE SOFTWARE ############
-#RUN yum install -y net-tools; yum clean all
+RUN yum install -y net-tools; yum clean all
+
+RUN yum -y install openssh-server supervisor; yum clean all
+RUN mkdir /var/run/sshd
+RUN echo 'root:password' |chpasswd
+#RUN useradd padupa
+RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N '' 
+ADD supervisord.conf /etc/supervisord.conf
+
 
 ####### HTTPD ####################
 RUN yum install -y httpd; yum clean all
@@ -33,10 +41,10 @@ RUN mv /etc/httpd/conf.d/mod_cluster.conf.new /etc/httpd/conf.d/mod_cluster.conf
 
 ####### OPEN PORTS ###############
 EXPOSE 80
-
+EXPOSE 22
 ####### START SERVICES ###########
 # Simple startup script to avoid some issues observed with container restart 
 ADD docker_init.sh /docker_init.sh
 RUN chmod +x /docker_init.sh
 
-CMD ["/docker_init.sh"]
+CMD ["/usr/bin/supervisord"]

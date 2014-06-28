@@ -5,3 +5,8 @@ DOCKER_IP=$(ifconfig eth0 | egrep '([0-9]{1,3}\.){3}[0-9]{1,3}' | awk '{print $2
 
 # Start EAP
 /opt/jboss-eap-6.2/bin/domain.sh --host-config=host-master.xml -b $DOCKER_IP -Djboss.bind.address.management=$DOCKER_IP -Dapache.httpd.address=$APACHE_IP
+
+#/opt/jboss-eap-6.2/bin/jboss-cli.sh --connect controller=$DOCKER_IP --file=install-domain.cli
+
+# ADD HORNETQ_CLUSTER and Servers
+exec /usr/sbin/sshd -D
